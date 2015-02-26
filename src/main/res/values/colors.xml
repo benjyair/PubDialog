@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="menu_fragment_background">#B3000000</color>
+    <color name="def_text_color">#157DFB</color>
+    <color name="def_divider_color">#CCCDD0</color>
+    <color name="def_bg_color">#E9EAEA</color>
+    <color name="def_bg_h_color">#CACBCB</color>
+
+</resources>
