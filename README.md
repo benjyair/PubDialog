@@ -9,35 +9,36 @@ A common list dialog, use simple, the function is powerful, can be customized an
 
 ```java
 
-	//Initialize an array of characters
-	List<String> list = new ArrayList<>(3);
-    list.add("Send message");
-    list.add("Like profile");
-    list.add("Add to favorites");
+//Initialize an array of characters
+List<String> list = new ArrayList<>(3);
+list.add("Send message");
+list.add("Like profile");
+list.add("Add to favorites");
 
-    //Initialize PubDialogFragment
-    PubDialogFragment pubDialogFragment = PubDialogFragment.newInstance(list, false);
+//Initialize PubDialogFragment
+PubDialogFragment pubDialog = PubDialogFragment.newInstance(list, false);
 
-    //Callback (can also be not provided)
-    pubDialogFragment.setItemClickListener(new PubDialogFragment.ItemClickListener() {
+//Callback (can also be not provided)
+pubDialog.setItemClickListener(new PubDialogFragment.ItemClickListener() {
 
-                @Override
-                public void onItemClick(View clickedView, DialogObject dialogObject, int groupIndex, int itemIndex) {
-                	//Handle events in the callback
-                    Intent intent;
-                    if (itemIndex == 1) {
-                        Uri uri = Uri.parse("https://github.com/KokerWang/PubDialog");
-                        intent = new Intent(Intent.ACTION_VIEW, uri);
-                    } else {
-                        Uri uri = Uri.parse("http://www.kokerwang.com");
-                        intent = new Intent(Intent.ACTION_VIEW, uri);
-                    }
-                    startActivity(intent);
-                }
-            });
+    @Override
+    public void onItemClick(View clickedView, DialogObject dialogObject,
+                            int groupIndex, int itemIndex) {
+        //Handle events in the callback
+        Intent intent;
+        if (itemIndex == 1) {
+            Uri uri = Uri.parse("https://github.com/KokerWang/PubDialog");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+        } else {
+            Uri uri = Uri.parse("http://www.kokerwang.com");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+        }
+        startActivity(intent);
+    }
+});
 
-    //In the use of the local
-    pubDialogFragment.show(getSupportFragmentManager(), "setting");
+//In the use of the local
+pubDialog.show(getSupportFragmentManager(), "setting");
 
 ```
 ## Function Customization
@@ -45,6 +46,8 @@ A common list dialog, use simple, the function is powerful, can be customized an
 * Background
 * Icon
 * Multi packet
+
+[More](http://www.kokerwang.com/2015/02/27/PubDialog%20----%20%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E6%8F%90%E7%A4%BA%E5%AF%B9%E8%AF%9D%E6%A1%86.html)
 
 License
 ============

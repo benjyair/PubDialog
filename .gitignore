@@ -1,1 +1,15 @@
 /build
+/.gradle
+
+#OSX
+.DS_Store
+
+#IntelliJ IDEA
+.idea
+*.iml
+*.ipr
+*.iws
+out
+local.properties
+
+*.iml
