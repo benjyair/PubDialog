@@ -10,13 +10,13 @@ A common list dialog, use simple, the function is powerful, can be customized an
 ```java
 
 	//Initialize an array of characters
-	List<String> list1 = new ArrayList<>(3);
-    list1.add("Send message");
-    list1.add("Like profile");
-    list1.add("Add to favorites");
+	List<String> list = new ArrayList<>(3);
+    list.add("Send message");
+    list.add("Like profile");
+    list.add("Add to favorites");
 
     //Initialize PubDialogFragment
-    PubDialogFragment pubDialogFragment = PubDialogFragment.newInstance(list1, false);
+    PubDialogFragment pubDialogFragment = PubDialogFragment.newInstance(list, false);
 
     //Callback (can also be not provided)
     pubDialogFragment.setItemClickListener(new PubDialogFragment.ItemClickListener() {
