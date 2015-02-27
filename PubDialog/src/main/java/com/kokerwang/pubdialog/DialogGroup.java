@@ -1,10 +1,10 @@
-package com.kokerwang.pubdialog.ui;
+package com.kokerwang.pubdialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 对List<DialogObject>的简单封装 看着舒服些
+ * Simple package looked comfortable on List<DialogObject>
  * <p/>
  * Created by KokerWang on 15/2/26.
  */
@@ -17,6 +17,11 @@ public class DialogGroup {
 
     public DialogGroup(int size) {
         dialogObjects = new ArrayList<>(size);
+    }
+
+    public DialogGroup(String dialogObjectName) {
+        dialogObjects = new ArrayList<>();
+        dialogObjects.add(new DialogObject(dialogObjectName));
     }
 
     public DialogGroup(DialogObject dialogObject) {

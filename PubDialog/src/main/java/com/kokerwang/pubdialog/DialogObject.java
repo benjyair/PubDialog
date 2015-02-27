@@ -1,27 +1,27 @@
-package com.kokerwang.pubdialog.ui;
+package com.kokerwang.pubdialog;
 
 
 /**
- * Dialog item对象
+ * Dialog item
  * <p/>
  * Created by KokerWang on 15/2/26.
  */
 public class DialogObject {
 
     /**
-     * 显示名称
+     * Name
      */
     private String name;
     /**
-     * 图片资源id
+     * Img resources id
      */
     private int imgSrc;
     /**
-     * 字体颜色资源id
+     * Font color resources id
      */
     private int textColor;
     /**
-     * 背景资源id
+     * Background resources id
      */
     private int bgId;
 

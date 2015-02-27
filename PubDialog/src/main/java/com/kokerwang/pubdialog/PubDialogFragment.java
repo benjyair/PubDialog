@@ -1,8 +1,9 @@
-package com.kokerwang.pubdialog.ui;
+package com.kokerwang.pubdialog;
 
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kokerwang.pubdialog.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * PubDialogFragment
- * 使用时对应的Activity实现ItemClickListener接口处理回调
+ * When in use, the corresponding Activity implementation of the ItemClickListener interface processing callback
  * <p/>
  * Created by KokerWang on 15/2/26.
  */
@@ -31,22 +30,26 @@ public class PubDialogFragment extends DialogFragment {
     private ItemClickListener itemClickListener;
 
     /**
-     * 使用该DialogFragment 的Activity需要实现该接口来处理事件回调
+     * Using the DialogFragment Activity needs to implement the interface to handle the event callback
      */
     public interface ItemClickListener {
-        /**
-         * 点击事件回调
-         *
-         * @param clickedView  对应的View
-         * @param dialogObject 对应的Item对象
-         */
-        public void onItemClick(View clickedView, DialogObject dialogObject);
+
+        public void onItemClick(View clickedView, DialogObject dialogObject, int groupIndex, int itemIndex);
     }
 
 
     public static PubDialogFragment newInstance(List<DialogGroup> dialogGroups) {
         PubDialogFragment pubDialogFragment = new PubDialogFragment();
         pubDialogFragment.dialogGroups = dialogGroups;
+        return pubDialogFragment;
+    }
+
+    public static PubDialogFragment newInstance(DialogGroup... dialogGroups) {
+        PubDialogFragment pubDialogFragment = new PubDialogFragment();
+        pubDialogFragment.dialogGroups = new ArrayList<>(dialogGroups.length);
+        for (DialogGroup group : dialogGroups) {
+            pubDialogFragment.dialogGroups.add(group);
+        }
         return pubDialogFragment;
     }
 
@@ -64,16 +67,6 @@ public class PubDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            itemClickListener = (ItemClickListener) activity;
-        } catch (ClassCastException e) {
-            itemClickListener = null;
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_FRAME, R.style.DialogFragmentStyle);
@@ -84,88 +77,108 @@ public class PubDialogFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
         initViews(rootView);
         getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (getDialog().isShowing() && !isAnim) {
+                        dismissWithAnim();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
         return rootView;
     }
 
-    LinearLayout ll_dialog;
+    private LinearLayout ll_dialog;
+    private Animation in_anim;
 
     private void initViews(View view) {
         ll_dialog = (LinearLayout) view.findViewById(R.id.ll_dialog);
 
-        ll_dialog.post(new Runnable() {
-            @Override
-            public void run() {
 
-            }
-        });
         ll_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PubDialogFragment.this.dismiss();
+                dismissWithAnim();
             }
         });
-        for (DialogGroup dialogGroup : dialogGroups) {
+
+        for (int j = 0; j < dialogGroups.size(); j++) {
+            DialogGroup dialogGroup = dialogGroups.get(j);
             for (int i = 0; i < dialogGroup.size(); i++) {
-                ll_dialog.addView(dataToView(dialogGroup.get(i), getItemLocation(i, dialogGroup.size())));
+                ll_dialog.addView(dataToView(dialogGroup.get(i), j, i, getItemLocation(i, dialogGroup.size())));
             }
         }
 
         ll_dialog.post(new Runnable() {
             @Override
             public void run() {
-                Animation am = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_in);
-                ll_dialog.startAnimation(am);
+                if (in_anim == null) {
+                    in_anim = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_in);
+                }
+                ll_dialog.startAnimation(in_anim);
             }
         });
     }
 
+    private Animation out_anim;
+    private boolean isAnim = false;
 
-    @Override
-    public void dismiss() {
-        ll_dialog.post(new Runnable() {
+    /**
+     * By the way of animation dismiss dialog
+     */
+    public void dismissWithAnim() {
+        if (out_anim == null) {
+            out_anim = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_out);
+        }
+        out_anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void run() {
-                Animation am = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_out);
-                am.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+            public void onAnimationStart(Animation animation) {
+                isAnim = true;
+            }
 
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isAnim = false;
+                ll_dialog.post(new Runnable() {
                     @Override
-                    public void onAnimationEnd(Animation animation) {
-                        PubDialogFragment.super.dismiss();
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
+                    public void run() {
+                        dismiss();
                     }
                 });
-                ll_dialog.startAnimation(am);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
             }
         });
+        ll_dialog.startAnimation(out_anim);
     }
 
     /**
-     * 数据转换为view
+     * Data conversion for view
      *
      * @param dialogObject
      * @param itemLocation
      * @return
      */
-    public View dataToView(final DialogObject dialogObject, ItemLocation itemLocation) {
+    public View dataToView(final DialogObject dialogObject, final int groupIndex, final int itemIndex, ItemLocation itemLocation) {
         View ll_item = LinearLayout.inflate(getActivity(), R.layout.lay_item, null);
         if (itemClickListener != null) {
             ll_item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClickListener.onItemClick(v, dialogObject);
+                    itemClickListener.onItemClick(v, dialogObject, groupIndex, itemIndex);
                 }
             });
         }
 
         int dp10 = (int) getActivity().getResources().getDimension(R.dimen.def_gap);
 
-        //设置间距
+        //set gap
         switch (itemLocation) {
             case CENTER:
             case BOTTOM:
@@ -179,12 +192,12 @@ public class PubDialogFragment extends DialogFragment {
                 break;
         }
 
-        //初始化背景
+        //init background
 
         if (dialogObject.getBgId() != 0) {
             ll_item.setBackgroundResource(dialogObject.getBgId());
         } else {
-            //设置默认背景
+            //set default background
             switch (itemLocation) {
                 case TOP:
                     ll_item.setBackgroundResource(R.drawable.item_top);
@@ -203,7 +216,7 @@ public class PubDialogFragment extends DialogFragment {
         }
         ll_item.setPadding(dp10, dp10, dp10, dp10);
 
-        //初始化组件
+        //init view
 
         //name
         TextView textView = (TextView) ll_item.findViewById(R.id.tv_name);
@@ -226,7 +239,7 @@ public class PubDialogFragment extends DialogFragment {
     }
 
     /**
-     * 根据item所在位置计算背景的类型
+     * Depending on the type of item location computing background
      *
      * @param index
      * @param size
@@ -245,4 +258,7 @@ public class PubDialogFragment extends DialogFragment {
         return ItemLocation.CENTER;
     }
 
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 }

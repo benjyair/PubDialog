@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PubDialogDemo</string>
+    <string name="text_style_0">Simple style</string>
+    <string name="text_style_1">QQ style</string>
+    <string name="text_style_2">Share style</string>
+    <string name="text_style_3">Custom style</string>
+
+</resources>

@@ -1,7 +1,7 @@
-package com.kokerwang.pubdialog.ui;
+package com.kokerwang.pubdialog;
 
 /**
- * Item背景的类型
+ * Position type for Item background
  * Created by KokerWang on 15/2/26.
  */
 public enum ItemLocation {
