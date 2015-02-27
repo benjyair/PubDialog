@@ -1,29 +1,29 @@
 # PubDialog
-一款常用的列表对话框，使用简单，功能强大，可定制性强
+A common list dialog, use simple, the function is powerful, can be customized and strong
 
 ![PubDialog](https://github.com/KokerWang/PubDialog/blob/master/show_demo.gif)
 
-[下载demo](https://github.com/KokerWang/PubDialog/blob/master/apk/PubDialogExample-debug.apk)
+[Download Demo](https://github.com/KokerWang/PubDialog/blob/master/apk/PubDialogExample-debug.apk?raw=true)
 
-##使用
+##Use
 
 ```java
 
-	//初始化一个字符数组
+	//Initialize an array of characters
 	List<String> list1 = new ArrayList<>(3);
     list1.add("Send message");
     list1.add("Like profile");
     list1.add("Add to favorites");
 
-    //初始化PubDialogFragment
+    //Initialize PubDialogFragment
     PubDialogFragment pubDialogFragment = PubDialogFragment.newInstance(list1, false);
 
-    //设置回调(也可以不设置)
+    //Callback (can also be not provided)
     pubDialogFragment.setItemClickListener(new PubDialogFragment.ItemClickListener() {
 
                 @Override
                 public void onItemClick(View clickedView, DialogObject dialogObject, int groupIndex, int itemIndex) {
-                	//在回调中处理事件
+                	//Handle events in the callback
                     Intent intent;
                     if (itemIndex == 1) {
                         Uri uri = Uri.parse("https://github.com/KokerWang/PubDialog");
@@ -36,15 +36,15 @@
                 }
             });
 
-    //在使用的地方
+    //In the use of the local
     pubDialogFragment.show(getSupportFragmentManager(), "setting");
 
 ```
-##功能
-* 字体颜色
-* 背景
-* icon
-* 多分组
+## Function Customization
+* The font color
+* Background
+* Icon
+* Multi packet
 
 License
 ============
