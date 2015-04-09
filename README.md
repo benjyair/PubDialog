@@ -1,5 +1,5 @@
 # PubDialog
-A common list dialog, use simple, the function is powerful, can be customized and strong
+A common list dialog, use simple, the function is powerful, can be customized and strong, like UIActionSheet in IOS 
 
 ![PubDialog](https://github.com/KokerWang/PubDialog/blob/master/show_demo.gif)
 
