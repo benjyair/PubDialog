@@ -25,15 +25,7 @@ pubDialog.setItemClickListener(new PubDialogFragment.ItemClickListener() {
     public void onItemClick(View clickedView, DialogObject dialogObject,
                             int groupIndex, int itemIndex) {
         //Handle events in the callback
-        Intent intent;
-        if (itemIndex == 1) {
-            Uri uri = Uri.parse("https://github.com/KokerWang/PubDialog");
-            intent = new Intent(Intent.ACTION_VIEW, uri);
-        } else {
-            Uri uri = Uri.parse("http://www.kokerwang.com");
-            intent = new Intent(Intent.ACTION_VIEW, uri);
-        }
-        startActivity(intent);
+        //do something
     }
 });
 

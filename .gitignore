@@ -13,3 +13,5 @@ out
 local.properties
 
 *.iml
+
+PubDialogExample/PubDialogExample.iml
